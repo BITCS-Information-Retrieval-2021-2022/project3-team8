@@ -147,8 +147,24 @@ bash weblogout 学号 密码
 su
 # 进入MongoDB的tmux环境
 tmux a -t mongodb
+# 启动MongoDB服务
+service mongodb start
+# 停止MongoDB服务
+service mongodb stop
+# 重启MongoDB服务
+service mongodb restart
 # 进入MongoDB
 mongo
+# 查看所有database
+show dbs
+# 查看所有collections
+show collections
+# 创建database
+use db_name
+# 创建集合
+db.createCollection("collection_name")
+# 删除集合
+db.collection_name.drop()
 ```
 
 ### 3. ES
