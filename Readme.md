@@ -112,13 +112,19 @@ ps：请将大型数据存储在`/home`路径下，`/`路径容量不大
 
 ## 项目环境
 
-### · ES
+### ES
 
-v7.15
+* version: v7.15
+* ip: 10.108.17.104
+* port: 9200
 
-### · MongoDB
+### MongoDB
 
-v3.6.3
+* version: v3.6.3
+* ip: 10.108.17.104
+* port: 27017
+* 数据文件位置： `/home/db/data`
+* 日志文件位置：`/home/db/log`
 
 ### · Python环境
 
