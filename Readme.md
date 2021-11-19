@@ -136,7 +136,7 @@ ps：请将大型数据存储在`/home`路径下，`/`路径容量不大
 
 ### 1. 校园网登入、登出
 
-脚本路径`/home/public`
+脚本位置`/home/public`
 
 ```shell
 cd /home/public
