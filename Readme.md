@@ -94,17 +94,18 @@ ps：请将个人数据存放在该路径下
 
 #### 2. 引文原始数据
 
-已经将助教给出的引文原始数据存放于`/home/data`路径下
+已经将助教给出的引文原始数据存放于`/home/data/citation_data`路径下
 
 #### 3 服务器存储结构
 
-| 目录  | 大小 | 挂载点    | 硬盘 |
-| ----- | ---- | --------- | ---- |
-| EFI   | 500M | /dev/sda1 | SSD  |
-| /boot | 500M | /dev/sda2 | SSD  |
-| /swap | 16G  | /dev/sda3 | SSD  |
-| /     | 105G | /dev/sda4 | SSD  |
-| /home | 3T   | /dev/sdb  | HDD  |
+| 目录        | 大小 | 挂载点    | 硬盘 |
+| ----------- | ---- | --------- | ---- |
+| EFI         | 500M | /dev/sda1 | SSD  |
+| /boot       | 500M | /dev/sda2 | SSD  |
+| /swap       | 16G  | /dev/sda3 | SSD  |
+| /           | 105G | /dev/sda4 | SSD  |
+| /home       | 3T   | /dev/sdb1 | HDD  |
+| /home/solid | 500G | /dev/sdc1 | SSD  |
 
 ps：请将大型数据存储在`/home`路径下，`/`路径容量不大
 
@@ -112,13 +113,37 @@ ps：请将大型数据存储在`/home`路径下，`/`路径容量不大
 
 ## 项目环境
 
-### · ES
+### ES
 
-v7.15
+* version: v7.15.2
+* ip: 10.108.17.104
+* port: 9200
+* username: elastic
+* password: 000000
+* 配置文件位置: `/home/solid/elasticsearch/config/elasticsearch.yml`
 
-### · MongoDB
+### MongoDB
 
-v3.6.3
+* version: v3.6.3
+* ip: 10.108.17.104
+* port: 27017
+* 数据文件位置: `/home/solid/db/data`
+* 日志文件位置:`/home/solid/db/log`
+* 配置文件位置:`/etc/mongodb.conf`
+
+### kibana
+
+* version: v7.15.2
+* ip: 10.108.17.104
+* port: 5601
+* username: elastic
+* password: 000000
+* 配置文件位置:`/home/solid/kibana/config/kibana.yml`
+
+### monstache
+
+* version: v6.7.6
+* 配置文件位置:`/home/solid/monstache/config.toml`
 
 ### · Python环境
 
@@ -130,7 +155,7 @@ v3.6.3
 
 ### 1. 校园网登入、登出
 
-脚本路径`/home/public`
+脚本位置`/home/public`
 
 ```shell
 cd /home/public
@@ -147,8 +172,24 @@ bash weblogout 学号 密码
 su
 # 进入MongoDB的tmux环境
 tmux a -t mongodb
+# 启动MongoDB服务
+service mongodb start
+# 停止MongoDB服务
+service mongodb stop
+# 重启MongoDB服务
+service mongodb restart
 # 进入MongoDB
 mongo
+# 查看所有database
+show dbs
+# 查看所有collections
+show collections
+# 创建database
+use db_name
+# 创建集合
+db.createCollection("collection_name")
+# 删除集合
+db.collection_name.drop()
 ```
 
 ### 3. ES
@@ -158,6 +199,50 @@ mongo
 su lsh
 # 进入ES的tmux环境
 tmux a -t es
+```
+
+
+
+## 代码说明
+
+### 1. MongoDB数据
+
+原始数据： `/home/data/citation_data`
+
+包含重要性字段数据：`/home/solid/citation_data_final`
+
+数据入库（对应库中代码：`/src/server/importData.sh`）：
+
+```shell
+bash importData.sh 1499
+```
+
+创建视图（对应库中代码：`/src/server/createView.txt`）：
+
+```shell
+# mongo
+rs:PRIMARY> use IR
+rs:PRIMARY> db.createView("citationsView", "citations", [{$project: {"Sid": 1, "title": 1, "year": 1, "inCitationsCount": 1, "outCitationsCount": 1, "importance": 1}}])
+```
+
+### 2. 创建ES索引
+
+删除原有索引，并创建新索引（对应库中代码：`/src/server/build_citations.sh`）：
+
+```
+bash build_citations.sh
+```
+
+### 3. 同步DB-ES
+
+将MongoDB中的数据同步到ES索引中
+
+Tool: `monstache`
+
+cmd（对应库中配置文件：`/config/monstache/config.toml`）
+
+```shell
+monstache -f /home/solid/monstache/config.toml
 ```
 
 
