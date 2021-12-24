@@ -78,6 +78,7 @@ class PaperAccess(DBAccess):
         super().__init__(**kwargs)
         self.func_map = {
             "TITLE": self.search_by_paper_id_list,
+            "CITATIONS": self.search_by_citation_root_sid
         }
 
     def search_by_sid(self, sid):
@@ -109,3 +110,42 @@ class PaperAccess(DBAccess):
         query["hits"]["hit"] = res
         # res = self.modify_res(query)
         return query
+
+     def search_by_citation_root_sid(self, query):
+        root_sid = query["sid"]
+        depth = query["depth"]
+        length = query["length"]
+        res = self.search_by_sid(root_sid)
+        self.reformat_id(res)
+        res["_id"] = res["Sid"]
+        self.shrink_citations(res, length)
+        if depth > 0:
+            self.append_citations(res, depth, 1, length)
+        query["hit"] = res
+        return query
+
+    def append_citations(self, root, max_depth, depth, length):
+        if depth <= max_depth:
+            for i in range(len(root["inCitations_shrink"])):
+                self.shrink_citations(root["inCitations_shrink"][i], length)
+                self.append_citations(root["inCitations_shrink"][i], max_depth, depth + 1, length)
+            for i in range(len(root["outCitations_shrink"])):
+                self.shrink_citations(root["outCitations_shrink"][i], length)
+                self.append_citations(root["outCitations_shrink"][i], max_depth, depth + 1, length)
+
+    def shrink_citations(self, root, length):
+        inCitations_total = list(filter(None, self.search_by_sid_list(root["inCitations"])))
+        self.reformat_id(inCitations_total)
+        self.replace_id_view(inCitations_total)
+        if length > len(inCitations_total):
+            root["inCitations_shrink"] = sorted(inCitations_total, key=lambda item: item["importance"], reverse=True)[:length]
+        else:
+            root["inCitations_shrink"] = inCitations_total
+
+        outCitations_total = list(filter(None, self.search_by_sid_list(root["outCitations"])))
+        self.reformat_id(outCitations_total)
+        self.replace_id_view(outCitations_total)
+        if length > len(outCitations_total):
+            root["outCitations_shrink"] = sorted(outCitations_total, key=lambda item: item["importance"], reverse=True)[:length]
+        else:
+            root["outCitations_shrink"] = inCitations_total
