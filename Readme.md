@@ -270,6 +270,16 @@ monstache -f /home/solid/monstache/config.toml
     - `sort_by_outcite`：是否按引用量排序  
     - `sort_by_importance`：是否按重要性排序。值为true或false，在后端会映射为python中的True或False
 
+2. **citations**
+
+  - **说明**
+    - 引用网络查询，根据query论文的Sid递归检索其引用和被引用论文信息
+  - **参数**
+    - `type`：查询类型
+    - `sid`：query论文的Sid
+    - `depth`：递归深度
+    - `length`：引用查询展开深度
+
 ## 提交说明
 
 请在`project3-team8`中创建个人分支，将所有修改提交到个人分支中，确定无误后再合并至主分支，以避免污染主分支，并且方便出现问题后进行回滚操作。
