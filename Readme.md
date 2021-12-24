@@ -245,7 +245,30 @@ cmd（对应库中配置文件：`/config/monstache/config.toml`）
 monstache -f /home/solid/monstache/config.toml
 ```
 
+### 4.  接口部分
 
+基于flask的后端接口搭建，使用python进行ES和MongoDB检索并返回结果（对应库中代码：`/src/backend/`）
+
+
+
+## 接口说明
+
+1. **query**
+
+  - **说明**
+    - 主查询，根据query在title中检索并返回相应的文档。
+  - **参数**
+    - `type`：查询类型
+    - `query`：查询内容
+    - `from`：返回分页结果的第几页
+    - `size`：每一页的文档数量
+    - `filter_year`：是否按年份过滤，值为true或false，在后端会映射为python中的True或False
+    - `s_year`：年份过滤的起始年份
+    - `e_year`：年份过滤的结束年份
+    - `sort_by_time`：是否按时间排序。值为false、desc或asc。false表示不排序，desc表示按降序排列，desc表示按升序排列，下同
+    - `sort_by_incite`：是否按被引用量排序  
+    - `sort_by_outcite`：是否按引用量排序  
+    - `sort_by_importance`：是否按重要性排序。值为true或false，在后端会映射为python中的True或False
 
 ## 提交说明
 
