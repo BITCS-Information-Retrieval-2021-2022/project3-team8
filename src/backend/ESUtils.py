@@ -1,5 +1,5 @@
 from flask import request
-from settings import parameters, bool_map
+from settings import parameters, bool_map, sort_map
 import time
 import json
 
@@ -8,6 +8,7 @@ def reformat_title(args):
     args["size"] = int(args["size"])
 
     args["filter_year"] = bool_map[args["filter_year"]]
+    args["sort_by_importance"] = bool_map[args["sort_by_importance"]]
     args["s_year"] = int(args["s_year"])
     args["e_year"] = int(args["e_year"])
 

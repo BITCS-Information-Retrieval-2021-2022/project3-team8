@@ -86,16 +86,7 @@ class IRClient(ESClient):
                                             }
                                         ]
                                     }
-                                },
-                                "functions": [
-                                    {
-                                        "field_value_factor": {
-                                            "field": "importance",
-                                            "modifier": "log1p",
-                                            "missing": 1
-                                        }
-                                    }
-                                ]
+                                }
                             }
                         }
                     ]
@@ -103,6 +94,7 @@ class IRClient(ESClient):
             }
         }
         es_query["query"]["bool"]["filter"] = self.gen_filter(query)
+        es_query["query"]["bool"]["must"][0]["function_score"]["functions"] = self.gen_optimizer(query)
         es_query["sort"] = self.add_sort(query)
 
         res = self.es.search(index=self.index, body=es_query)
@@ -136,3 +128,11 @@ class IRClient(ESClient):
                 filter_query["range"]["year"]["lte"] = query["e_year"]
             es_filter.append(filter_query)
         return es_filter
+
+    def gen_optimizer(self, query):
+        es_optimizer = []
+        if query["sort_by_importance"]:
+            es_function = {"field_value_factor": {"field": "importance", "modifier": "log1p", "missing": 1}}
+            es_optimizer.append(es_function)
+        return es_optimizer
+        

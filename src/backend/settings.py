@@ -17,8 +17,8 @@ parameters = {
 
 sort_map = {
     "sort_by_time": "year",
-    "sort_by_incite": "inCitations",
-    "sort_by_outcite": "outCitations"
+    "sort_by_incite": "inCitationsCount",
+    "sort_by_outcite": "outCitationsCount"
 }
 
 bool_map = {
