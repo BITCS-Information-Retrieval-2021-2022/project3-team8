@@ -212,8 +212,8 @@ tmux a -t es
 从`/home/data/citation_data`读取并解析MongoDB中原始数据，使用Spark计算论文重要性得分，并导出至`/home/solid/citation_data_final`，用于下一步处理工作。
 
 环境：
-- Spark 2.7
-- Python 3.8
+- Spark 3.2
+- Python 3.6.9
 
 ### 1. MongoDB数据
 
