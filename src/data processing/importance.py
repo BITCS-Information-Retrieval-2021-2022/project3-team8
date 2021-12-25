@@ -5,6 +5,7 @@ import pymongo
 from tqdm import *
 from operator import add
 import math
+import json
 
 PART = 500
 MONGOURI = 'mongodb://10.108.17.104:27017/IR.citations'
@@ -36,11 +37,12 @@ def calc_contribs(x):
 
 def calc_scores(x):
     alpha = 1 / math.log10(10 + 2021 - x[1][2])
-    return alpha * x[0]
+    return alpha * x[0], *x[1]
 
-links = data.map(lambda x: (x[0], tuple(x[5]))).persist(StorageLevel.DISK_ONLY) # (sid, list)
+links = data.map(lambda x: (x[0], x[5])).persist(StorageLevel.DISK_ONLY) # (sid, list)
 ranks = links.map(lambda x: (x[0], 1.0)) # (sid, rank)
-tags = data.map(lambda x: (x[0], (int(x[4]), int(x[6]), int(x[8])))).persist(StorageLevel.DISK_ONLY) # (sid, (in_degree, out_degree, year))
+tags = data.map(lambda x: (x[0], (int(x[4]), int(x[6]), int(x[8]), x[3], x[5], x[7])))\
+            .persist(StorageLevel.DISK_ONLY) # (sid, (in_degree, out_degree, year, in, out, title))
 base = tags.filter(lambda x: x[1][0] == 0 and x[1][1] > 0).map(lambda x: (x[0], 0.15)).persist(StorageLevel.DISK_ONLY) # (sid, 0.15)
 empty = tags.filter(lambda x: x[1][0] + x[1][1] == 0).map(lambda x: (x[0], 0)) # (sid, 0)
 
@@ -49,34 +51,25 @@ for i in range(10):
     ranks = contribs.reduceByKey(add).mapValues(lambda rank: 0.85 * rank + 0.15)
     ranks = ranks.union(base).coalesce(PART)
 
-# (sid, (rank, (in_degree, out_degree, year))) => (sid, score)
+# (sid, (rank, (in_degree, out_degree, year, in, out, title))) => (sid, (score, in_degree, out_degree, year, in, out, title))
 scores = ranks.union(empty).join(tags).mapValues(calc_scores)
 
-def save_scores(part):
+def save_jsonl(part):
     pid = TaskContext().partitionId()
-    f = open('./tmp_db/part_{}'.format(pid), 'w')
+    f = open('./tmp_ir/part_{}.jsonl'.format(pid), 'w')
     for raw in part:
-        sid, score = raw
-        f.write('{}\t{}\n'.format(sid, score))
+        sid, payload = raw
+        record = {
+            'Sid': sid,
+            'importance': payload[0],
+            'inCitations': payload[4],
+            'inCitationsCount': payload[1],
+            'outCitations': payload[5],
+            'outCitationsCount': payload[2],
+            'title': payload[6],
+            'year': payload[3]
+        }
+        f.write('{}\n'.format(json.dumps(record)))
     f.close()
 
-scores.foreachPartition(save_scores)
-
-def write_db(part):
-    client = pymongo.MongoClient('mongodb://10.108.17.104:27017/')
-    db = client["IR"]["citations"]
-    part_update_ops = []
-    for raw in part:
-        sid, score = raw
-        raw_query = {"Sid": sid}
-        raw_value = {"$set": {"importance": score}}
-        raw_op = pymongo.UpdateOne(raw_query, raw_value)
-        part_update_ops.append(raw_op)
-        if len(part_update_ops) > 2000:
-            db.bulk_write(part_update_ops, False, True)
-            part_update_ops = []
-    if len(part_update_ops) > 2000:
-        db.bulk_write(part_update_ops, False, True)
-        part_update_ops = []
-
-scores.foreachPartition(write_db)
+scores.foreachPartition(save_jsonl)
