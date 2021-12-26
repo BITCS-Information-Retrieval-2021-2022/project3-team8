@@ -324,15 +324,20 @@ monstache -f /home/solid/monstache/config.toml
 ## 界面展示
 
 - 首页搜索页面
-  ![HomePage](.\images\HomePage.png)
-
+  <div align="center">
+    <img src="images/HomePage.png" alt="image-20211021105934462" width="100%"/>
+  </div>
 - 搜索结果页面
   原始结果展示：
-  ![normalResult](.\images\normalResult.png)
-  
+  <div align="center">
+    <img src="images/normalResult.png" alt="image-20211021105934462" width="100%"/>
+  </div>
   改善后的结果展示：
-  ![improvedResult](.\images\improvedResult.png)
-  
+  <div align="center">
+    <img src="images/improvedResult.png" alt="image-20211021105934462" width="100%"/>
+  </div>
 - 论文详情页 
-  ![paperDetail_1](.\images\paperDetail_1.png)
-  ![paperDetail_2](.\images\paperDetail_2.png)
+   <div align="center">
+    <img src="images/paperDetail_1.png" alt="image-20211021105934462" width="100%"/>
+    <img src="images/paperDetail_2.png" alt="image-20211021105934462" width="100%"/>
+  </div>
