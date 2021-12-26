@@ -113,6 +113,16 @@ ps：请将大型数据存储在`/home`路径下，`/`路径容量不大
 
 ## 项目环境
 
+### Spark
+
+* 系统：Ubuntu 16.04.6 LTS
+* ip: 10.108.17.185
+* web UI port: 4041
+* hadoop: v3.3.1
+* scalar: v2.12
+* spark: v3.2.0
+* 路径: `/usr/local/spark`
+
 ### ES
 
 * version: v7.15.2
@@ -226,7 +236,7 @@ npm run build
 从`/home/data/citation_data`读取并解析MongoDB中原始数据，使用Spark计算论文重要性得分，并导出至`/home/solid/citation_data_final`，用于下一步处理工作。
 
 环境：
-- Spark 3.2
+- Spark 3.2.0
 - Python 3.6.9
 
 ### 1. MongoDB数据
