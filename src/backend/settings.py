@@ -1,8 +1,6 @@
-import os
-
 parameters = {
     "host": "10.108.17.104",
-    
+
     # es
     "es_port": 9200,
     "es_user": "elastic",

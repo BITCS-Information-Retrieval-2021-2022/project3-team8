@@ -1,8 +1,7 @@
 import pymongo
 from bson.objectid import ObjectId
 import time
-import requests
-import json
+
 
 class DBAccess:
     def __init__(self, **kwargs):
@@ -27,7 +26,8 @@ class DBAccess:
         return res
 
     def sort_search(self, query, page_id, page_size, sort_condition):
-        res = self.doc.find(query).sort(sort_condition).skip(page_size*page_id).limit(page_size)
+        res = self.doc.find(query).sort(sort_condition)\
+            .skip(page_size*page_id).limit(page_size)
         return res
 
     def search_by_id(self, _id):
@@ -73,6 +73,7 @@ class DBAccess:
         self.db_client.close()
         print("mongodb connection closed")
 
+
 class PaperAccess(DBAccess):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -91,12 +92,12 @@ class PaperAccess(DBAccess):
         for sid in sid_list:
             res.append(self.search_by_sid(sid))
         return res
-    
+
     @DBAccess.time_record
     def search(self, query):
         res = self.func_map[query["type"]](query)
         return res
-    
+
     def search_by_paper_id_list(self, query):
         """
         :param query: full query
@@ -111,7 +112,7 @@ class PaperAccess(DBAccess):
         # res = self.modify_res(query)
         return query
 
-     def search_by_citation_root_sid(self, query):
+    def search_by_citation_root_sid(self, query):
         root_sid = query["sid"]
         depth = query["depth"]
         length = query["length"]
@@ -128,24 +129,35 @@ class PaperAccess(DBAccess):
         if depth <= max_depth:
             for i in range(len(root["inCitations_shrink"])):
                 self.shrink_citations(root["inCitations_shrink"][i], length)
-                self.append_citations(root["inCitations_shrink"][i], max_depth, depth + 1, length)
+                self.append_citations(root["inCitations_shrink"][i],
+                                      max_depth, depth + 1, length)
             for i in range(len(root["outCitations_shrink"])):
                 self.shrink_citations(root["outCitations_shrink"][i], length)
-                self.append_citations(root["outCitations_shrink"][i], max_depth, depth + 1, length)
+                self.append_citations(root["outCitations_shrink"][i],
+                                      max_depth, depth + 1, length)
 
     def shrink_citations(self, root, length):
-        inCitations_total = list(filter(None, self.search_by_sid_list(root["inCitations"])))
+        inCitations_total = list(
+            filter(None, self.search_by_sid_list(root["inCitations"])))
         self.reformat_id(inCitations_total)
         self.replace_id_view(inCitations_total)
         if length > len(inCitations_total):
-            root["inCitations_shrink"] = sorted(inCitations_total, key=lambda item: item["importance"], reverse=True)[:length]
+            root["inCitations_shrink"]\
+                = sorted(inCitations_total,
+                         key=lambda item: item["importance"],
+                         reverse=True)[:length]
         else:
-            root["inCitations_shrink"] = inCitations_total
+            root["inCitations_shrink"] \
+                = inCitations_total
 
-        outCitations_total = list(filter(None, self.search_by_sid_list(root["outCitations"])))
+        outCitations_total = list(
+            filter(None, self.search_by_sid_list(root["outCitations"])))
         self.reformat_id(outCitations_total)
         self.replace_id_view(outCitations_total)
         if length > len(outCitations_total):
-            root["outCitations_shrink"] = sorted(outCitations_total, key=lambda item: item["importance"], reverse=True)[:length]
+            root["outCitations_shrink"]\
+                = sorted(outCitations_total,
+                         key=lambda item: item["importance"],
+                         reverse=True)[:length]
         else:
             root["outCitations_shrink"] = inCitations_total
