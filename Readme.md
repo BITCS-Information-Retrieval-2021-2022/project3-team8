@@ -149,6 +149,10 @@ ps：请将大型数据存储在`/home`路径下，`/`路径容量不大
 
 个人Python环境请使用`miniconda`进行创建和配置，尽量不要使用sudo安装，以免污染他人环境。
 
+### · 前端环境
+* Node.js 
+* npm 
+* Vue CLI 
 
 
 ## 常用命令
@@ -201,6 +205,16 @@ su lsh
 tmux a -t es
 ```
 
+### 4. 前端
+在前端根目录下
+```shell
+# 安装依赖组件包
+npm install
+# 使用调试模式打开网站
+npm run serve
+# 使用生产模式打包部署
+npm run build
+```
 
 
 ## 代码说明
@@ -255,10 +269,13 @@ cmd（对应库中配置文件：`/config/monstache/config.toml`）
 monstache -f /home/solid/monstache/config.toml
 ```
 
-### 4.  接口部分
+### 4. 前端部分
+
+基于Vue框架结合element-ui组件库进行开发（对应库中代码：/src/fontend）
+
+### 5.  接口部分
 
 基于flask的后端接口搭建，使用python进行ES和MongoDB检索并返回结果（对应库中代码：`/src/backend/`）
-
 
 
 ## 接口说明
