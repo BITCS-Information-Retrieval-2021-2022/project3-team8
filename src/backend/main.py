@@ -4,7 +4,6 @@ from DBAccess import PaperAccess
 from settings import parameters, sort_map
 from ESUtils import gen_query
 import json
-import time
 
 app = Flask(__name__)
 
@@ -21,6 +20,7 @@ citation_db = PaperAccess(hosts=parameters["host"],
                           doc_name=parameters["doc_name"],
                           sort_map=sort_map,)
 
+
 @app.route('/query', methods=['GET'])
 def search():
     query = gen_query()
@@ -29,11 +29,13 @@ def search():
     # logger.write(gen_log(res))
     return json.dumps(res)
 
+
 @app.route('/citations', methods=['GET'])
 def get_citations():
     query = gen_query()
     res = citation_db.search(query)
     return json.dumps(res)
-    
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
