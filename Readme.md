@@ -232,8 +232,11 @@ npm run build
 ### 0. 数据处理
 
 代码：`/src/data processing/importance.py`
+
 含重要性得分的文件示例：`/src/data processing/part_0.jsonl`
+
 写入文件的日志：`/src/data processing/calc_ir.out`
+
 
 从`/home/data/citation_data`读取并解析MongoDB中原始数据，使用Spark计算论文重要性得分，并导出至`/home/solid/citation_data_final`，用于下一步处理工作。
 
