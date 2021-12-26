@@ -141,7 +141,7 @@ class PaperAccess(DBAccess):
             filter(None, self.search_by_sid_list(root["inCitations"])))
         self.reformat_id(inCitations_total)
         self.replace_id_view(inCitations_total)
-        if length > len(inCitations_total):
+        if length < len(inCitations_total):
             root["inCitations_shrink"]\
                 = sorted(inCitations_total,
                          key=lambda item: item["importance"],
@@ -154,7 +154,7 @@ class PaperAccess(DBAccess):
             filter(None, self.search_by_sid_list(root["outCitations"])))
         self.reformat_id(outCitations_total)
         self.replace_id_view(outCitations_total)
-        if length > len(outCitations_total):
+        if length < len(outCitations_total):
             root["outCitations_shrink"]\
                 = sorted(outCitations_total,
                          key=lambda item: item["importance"],
