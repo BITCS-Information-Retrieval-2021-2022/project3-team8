@@ -74,7 +74,7 @@ export default {
       hasFilter: [],
       sortBy: "normal",
       // Result
-      resultDoc: [],
+      resultDoc: []
     };
   },
   computed: {
@@ -102,7 +102,7 @@ export default {
         },
         {
           value: "importance",
-          label: "重要性分数降序"
+          label: "importance优化排序"
         }
       ];
     },
@@ -197,19 +197,29 @@ export default {
       this.axios
         .get(
           prefix +
-            "query=" +queryStr +
-            "&from=" +pageFrom +
-            "&size=" +"10" +
-            "&filter_year=" +"false" +
-            "&s_year=" +"2015" +
-            "&e_year=" +"2022" +
-            "&sort_by_incite=" +"false" +
-            "&sort_by_outcite=" +"false" +
-            "&sort_by_time=" +"false" +
-            "&sort_by_importance=" + (this.sortBy == "importance")
+            "query=" +
+            queryStr +
+            "&from=" +
+            pageFrom +
+            "&size=" +
+            "10" +
+            "&filter_year=" +
+            "false" +
+            "&s_year=" +
+            "2015" +
+            "&e_year=" +
+            "2022" +
+            "&sort_by_incite=" +
+            "false" +
+            "&sort_by_outcite=" +
+            "false" +
+            "&sort_by_time=" +
+            "false" +
+            "&sort_by_importance=" +
+            (this.sortBy == "importance")
         )
         .then(response => {
-          console.log(response.data);
+          // console.log(response.data);
           const responseData = this.COMMON.toJson(response.data);
           this.totalDoc = responseData.hits.total; //查询出的总结果数
           responseData.hits.hit.forEach(function(hit) {
@@ -221,7 +231,7 @@ export default {
               })
             );
           }, this);
-          console.log(this.resultDoc);
+          // console.log(this.resultDoc);
         })
         .catch(error => {
           console.error(error);

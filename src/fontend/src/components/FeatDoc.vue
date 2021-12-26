@@ -47,27 +47,6 @@ export default {
     //发送请求函数
     //在此发送请求获取引文关系信息
     handleDoc() {
-      // //发送请求
-      // console.log("请求引文关系中。。。")
-      // this.axios
-      //   .get(
-      //     "/citations?type=CITATIONS&"+
-      //     "sid="+this.doc.Sid+
-      //     "&depth=1"+"&length=10"
-      //   )
-      //   .then(response => {
-      //     if (response.data == "") {
-      //       console.log("Detailization event detected");
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.error(error);
-      //     // this.$message.error(this.$t("list.UnknownError"));
-      //   });
-      // this.$router.push({
-      //   path: "/full",
-      //   query: { id: this.doc.Sid }
-      // });
       this.entityList = [];
       this.triadList = [];
       this.docList = [];
@@ -82,7 +61,7 @@ export default {
         .then(response => {
           const responseData = this.COMMON.toJson(response.data);
           this.detailDoc = responseData.hit;
-          console.log(this.detailDoc.outCitations_shrink);
+          // console.log(this.detailDoc.outCitations_shrink);
           //sid当节点，整理节点信息
           //把中心节点也就是本论文的节点放入
           //inCitations该论文被引用
@@ -284,10 +263,10 @@ export default {
             }
           });
           //生成节点信息
-          console.log(this.entityList);
-          console.log(this.triadList);
-          console.log(this.docList);
-          this.entityList.forEach((item) => {
+          // console.log(this.entityList);
+          // console.log(this.triadList);
+          // console.log(this.docList);
+          this.entityList.forEach(item => {
             let DataTemp = {
               // itemStyle : {
               //     color:colors[key%13],
@@ -296,7 +275,7 @@ export default {
               itemStyle: null,
               value: 20,
               symbolSize: 30,
-              name: item,
+              name: item
             };
             this.dataList.push(DataTemp);
           });
@@ -320,7 +299,7 @@ export default {
           this.$store.commit("updateGraphData", {
             linkList: this.linkList,
             dataList: this.dataList,
-            docList: this.docList,
+            docList: this.docList
           });
         })
         .catch(error => {

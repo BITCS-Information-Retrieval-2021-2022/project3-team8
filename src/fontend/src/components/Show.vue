@@ -1,11 +1,16 @@
 <template>
   <div>
     <el-col :span="16">
-    <div id="myChart" :style="{ width: '100%', height: '500px' }"></div>
+      <div id="myChart" :style="{ width: '100%', height: '500px' }"></div>
     </el-col>
     <!-- Blog -->
-    <el-col v-if="docList.length" :span="8" class="col-blog mt-3" :style="{ overflow:'auto',height:'450px'}">
-      <ul class="list-unstyled mb-2" >
+    <el-col
+      v-if="docList.length"
+      :span="8"
+      class="col-blog mt-3"
+      :style="{ overflow: 'auto', height: '450px' }"
+    >
+      <ul class="list-unstyled mb-2">
         <li
           v-for="(doc, Index) in docList.slice(0, docMax)"
           :key="Index"
@@ -22,11 +27,7 @@
               >
                 <p class="m-0" style="font-size: 15px;">{{ doc.title }}</p>
               </el-link>
-              <p
-                v-if="doc.year"
-                class="grey-text m-0"
-                style="font-size: 13px;"
-              >
+              <p v-if="doc.year" class="grey-text m-0" style="font-size: 13px;">
                 {{ doc.year }}
               </p>
             </div>
@@ -40,7 +41,7 @@
                 effect="plain"
                 style="margin-bottom: 2px;"
               >
-                {{ (doc.importance+'').substring(0,5) }}
+                {{ (doc.importance + "").substring(0, 5) }}
               </el-tag>
             </div>
           </div>
@@ -48,17 +49,16 @@
       </ul>
     </el-col>
     <div v-if="docList.length > 5" class="text-center">
-        <el-link
-          @click="
-            docMax = fExpandDoc ? 5 : docList.length;
-            fExpandDoc = !fExpandDoc;
-          "
-          class="teal-text"
-        >
-          <span v-if="!fExpandDoc">展开</span
-          ><span v-else>收起</span>
-        </el-link>
-      </div>
+      <el-link
+        @click="
+          docMax = fExpandDoc ? 5 : docList.length;
+          fExpandDoc = !fExpandDoc;
+        "
+        class="teal-text"
+      >
+        <span v-if="!fExpandDoc">展开</span><span v-else>收起</span>
+      </el-link>
+    </div>
   </div>
 </template>
 
@@ -74,7 +74,7 @@ export default {
       docList: [],
       option: {},
       docMax: 5,
-      fExpandDoc: false,
+      fExpandDoc: false
     };
   },
   mounted() {
@@ -85,8 +85,7 @@ export default {
   },
   methods: {
     drawLine() {
-      console.log("hai");
-      console.log(this.$store.state.dataList);
+      // console.log(this.$store.state.dataList);
       // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById("myChart"));
       // 绘制图表
@@ -166,23 +165,23 @@ export default {
       };
       myChart.setOption(this.option);
       // 点击node节点的事件
-      myChart.on('click', function (param) {
-          console.log('node节点的数组---->', param.data);  // 打印出param, 可以看到里边有很多参数可以使用
-          // let key = 'symbolSize'
-          // let value = 80
-          //
-          // param.data[key] = value
+      myChart.on("click", function(param) {
+        // console.log('node节点的数组---->', param.data);  // 打印出param, 可以看到里边有很多参数可以使用
+        // let key = 'symbolSize'
+        // let value = 80
+        //
+        // param.data[key] = value
 
-          //获取节点点击的数组序号
-          var arrayIndex = param.dataIndex;
-          console.log('arrayIndex---->', arrayIndex);
-          console.log('name---->', param.name);
-          if (param.dataType == 'node') {
-              // alert("点击了节点" + param.name)
-          } else {
-              // alert("点击了边" + param.value)
-          }
-      })
+        //获取节点点击的数组序号
+        //var arrayIndex = param.dataIndex;
+        // console.log('arrayIndex---->', arrayIndex);
+        // console.log('name---->', param.name);
+        if (param.dataType == "node") {
+          // alert("点击了节点" + param.name)
+        } else {
+          // alert("点击了边" + param.value)
+        }
+      });
     }
   }
 };

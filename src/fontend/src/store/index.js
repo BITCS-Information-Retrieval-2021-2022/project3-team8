@@ -10,9 +10,9 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     //graph
-    dataList:[],
-    linkList:[],
-    docList:[],
+    dataList: [],
+    linkList: [],
+    docList: [],
     // Input
     searchInput: "",
     // List
@@ -84,11 +84,11 @@ export default new Vuex.Store({
   },
   mutations: {
     //graph
-    updateGraphData(state, data){
-      console.log("更新dataGraph")
-      state.dataList=data.dataList;
-      state.linkList=data.linkList;
-      state.docList=data.docList;
+    updateGraphData(state, data) {
+      // console.log("更新dataGraph")
+      state.dataList = data.dataList;
+      state.linkList = data.linkList;
+      state.docList = data.docList;
     },
     // Input
     updateInput(state, input) {
