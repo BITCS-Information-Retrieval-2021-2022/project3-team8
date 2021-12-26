@@ -2,7 +2,7 @@ from py4j.java_gateway import DEFAULT_ADDRESS
 from pyspark import SparkConf, SparkContext, TaskContext, StorageLevel
 from pyspark.sql import SparkSession
 import pymongo
-from tqdm import *
+from tqdm import tqdm
 from operator import add
 import math
 import json
@@ -40,7 +40,7 @@ def calc_contribs(x):
 
 def calc_scores(x):
     alpha = 1 / math.log10(10 + 2021 - x[1][2])
-    return alpha * x[0], *x[1]
+    return alpha * x[0], [x[1][0], x[1][1], x[1][2], x[1][3], x[1][4], x[1][5], x[1][6]]
 
 
 links = data.map(lambda x: (x[0], x[5])).persist(
