@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 import time
-import json
+
 
 class ESClient:
     def __init__(self, **kwargs):
@@ -34,7 +34,7 @@ class ESClient:
         return sort_condition
 
     def search(self, query):
-        raise NotImplemented
+        raise NotImplementedError
 
     @staticmethod
     def time_record(func):
@@ -50,13 +50,14 @@ class ESClient:
         self.es.close()
         print("elasticsearch closed")
 
+
 class IRClient(ESClient):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.func_map = {
             "TITLE": self.search_title
         }
-    
+
     @ESClient.time_record
     def search(self, query):
         return self.func_map[query["type"]](query)
@@ -67,8 +68,8 @@ class IRClient(ESClient):
             "from": query["size"]*query["from"],
             "size": query["size"],
             "query": {
-                "bool":{
-                    "must":[
+                "bool": {
+                    "must": [
                         {
                             "function_score": {
                                 "query": {
@@ -77,10 +78,12 @@ class IRClient(ESClient):
                                             {
                                                 "match": {
                                                     "title": {
-                                                        "query": query["query"], 
-                                                        "boost": 2.0, 
-                                                        "operator": "or", 
-                                                        "minimum_should_match": "85%"
+                                                        "query":
+                                                            query["query"],
+                                                        "boost": 2.0,
+                                                        "operator": "or",
+                                                        "minimum_should_match":
+                                                            "85%"
                                                     }
                                                 }
                                             }
@@ -93,8 +96,10 @@ class IRClient(ESClient):
                 }
             }
         }
-        es_query["query"]["bool"]["filter"] = self.gen_filter(query)
-        es_query["query"]["bool"]["must"][0]["function_score"]["functions"] = self.gen_optimizer(query)
+        es_query["query"]["bool"]["filter"]\
+            = self.gen_filter(query)
+        es_query["query"]["bool"]["must"][0]["function_score"]["functions"]\
+            = self.gen_optimizer(query)
         es_query["sort"] = self.add_sort(query)
 
         res = self.es.search(index=self.index, body=es_query)
@@ -104,8 +109,8 @@ class IRClient(ESClient):
         hit = dict()
         hit["total"] = res["hits"]["total"]["value"]
         hit["hit"] = id_list
-        return hit        
-    
+        return hit
+
     def add_sort(self, ori_query):
         sort_condition = []
         for key in self.sort_map:
@@ -132,7 +137,12 @@ class IRClient(ESClient):
     def gen_optimizer(self, query):
         es_optimizer = []
         if query["sort_by_importance"]:
-            es_function = {"field_value_factor": {"field": "importance", "modifier": "log1p", "missing": 1}}
+            es_function = {
+                "field_value_factor": {
+                    "field": "importance",
+                    "modifier": "log1p",
+                    "missing": 1
+                }
+            }
             es_optimizer.append(es_function)
         return es_optimizer
-        
