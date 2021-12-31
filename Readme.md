@@ -55,62 +55,6 @@
 + 展示引文网络子图的可视化效果
 
 
-
-## 项目配置
-
-### 服务器信息
-
-* 系统：Ubuntu 18.04 LTS
-* ip：10.108.17.104
-
-
-* ssh port：22
-
-
-* ps：本服务器为校园网内网服务器，请于校园网环境使用
-
-
-### 账户信息
-
-### 1. root
-
-账号：root
-
-密码：000000
-
-### 2. test
-
-账号：test
-
-密码：test
-
-### 文件结构
-
-#### 1. 用户个人空间
-
-每个账户创建后，均会在`/home`路径下创建个人存储空间，路径为`/home/username`
-
-ps：请将个人数据存放在该路径下
-
-#### 2. 引文原始数据
-
-已经将助教给出的引文原始数据存放于`/home/data/citation_data`路径下
-
-#### 3 服务器存储结构
-
-| 目录        | 大小 | 挂载点    | 硬盘 |
-| ----------- | ---- | --------- | ---- |
-| EFI         | 500M | /dev/sda1 | SSD  |
-| /boot       | 500M | /dev/sda2 | SSD  |
-| /swap       | 16G  | /dev/sda3 | SSD  |
-| /           | 105G | /dev/sda4 | SSD  |
-| /home       | 3T   | /dev/sdb1 | HDD  |
-| /home/solid | 500G | /dev/sdc1 | SSD  |
-
-ps：请将大型数据存储在`/home`路径下，`/`路径容量不大
-
-
-
 ## 项目环境
 
 ### Spark
@@ -128,8 +72,6 @@ ps：请将大型数据存储在`/home`路径下，`/`路径容量不大
 * version: v7.15.2
 * ip: 10.108.17.104
 * port: 9200
-* username: elastic
-* password: 000000
 * 配置文件位置: `/home/solid/elasticsearch/config/elasticsearch.yml`
 
 ### MongoDB
@@ -146,8 +88,6 @@ ps：请将大型数据存储在`/home`路径下，`/`路径容量不大
 * version: v7.15.2
 * ip: 10.108.17.104
 * port: 5601
-* username: elastic
-* password: 000000
 * 配置文件位置:`/home/solid/kibana/config/kibana.yml`
 
 ### monstache
